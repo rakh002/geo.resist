@@ -1,3 +1,10 @@
+
+#include <CD74HC4067.h>
+
+               // s0 s1 s2 s3
+CD74HC4067 my_mux(22, 24, 26, 28);  // c,24,26reate a new CD74HC4067 object with its four control pins
+
+
 bool bin[16][4]={
   {0,0,0,0},
   {1,0,0,0},
@@ -40,6 +47,7 @@ void MUX(byte mux, byte channel){
 void setup() {
   // Serial port initialization.
   Serial.begin(9600);
+//  pinMode(g_common_pin, OUTPUT); // set the initial mode of the common pin.
   // Pin Mux initialization
   for(int i=0; i<4; i++) {
     for(int j=0; j<4; j++){
@@ -50,23 +58,18 @@ void setup() {
 
 void loop() {
   // I injection (A)
-  MUX(0,i);
-  // I read (B)
-  MUX(3,i+3);
-  // V- (M)
-  MUX(1,i+1);
-  // V+ (N)
-  MUX(2,i+2);
-
+  my_mux.channel(i);
+  Serial.print("channel: ");
+  Serial.println(i+1);
+  
   // Measurement 1
   delay(1000);
   
   // Switch AB
-  // I injection (A)
-  MUX(0,i+3);
-  // I read (B)
-  MUX(3,i);
-
+  my_mux.channel(i+3);
+  Serial.print("channel: ");
+  Serial.println(i+4);
+  
   // Measurement 2
   delay(1000);
 
